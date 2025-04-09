@@ -47,18 +47,16 @@ jobs:
         
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      
-      # Add this step to ensure the upload-artifact action is available
-      - name: Setup upload-artifact
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
         
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: './docs'
+        run: |
+          # Create artifact directory
+          mkdir -p /tmp/artifact
+          # Copy docs content to artifact directory
+          cp -R ./docs/* /tmp/artifact/
+          # Use GitHub's built-in artifact functionality
+          echo "GITHUB_PAGES_ARTIFACT_PATH=/tmp/artifact" >> $GITHUB_ENV
           
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
